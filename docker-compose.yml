@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  gateway:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      IAAG_DB_PATH: /app/data/iaag.db
+      IAAG_SECRET_KEY: change-me
+      IAAG_AUTO_INIT_DB: "true"
+    volumes:
+      - ./data:/app/data

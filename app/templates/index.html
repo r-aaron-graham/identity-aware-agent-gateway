@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Identity-Aware Agent Gateway</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    h1 { margin-bottom: 8px; }
+    .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
+    .card { background: white; border-radius: 14px; box-shadow: 0 4px 18px rgba(0,0,0,.08); padding: 18px; }
+    textarea, select, input { width: 100%; padding: 10px; margin: 8px 0 14px; border: 1px solid #ccd2e0; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+    button { background: #1f4bd8; color: white; border: 0; border-radius: 999px; padding: 10px 16px; cursor: pointer; margin-right: 8px; }
+    button.secondary { background: #e7ebf6; color: #13214a; }
+    pre { background: #0f172a; color: #e5e7eb; padding: 14px; border-radius: 10px; overflow-x: auto; white-space: pre-wrap; }
+    .muted { color: #4b5563; }
+    .tokenBox { max-height: 220px; overflow: auto; background: #f8fafc; border-radius: 8px; padding: 10px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pill { display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:bold; background:#e8eefc; color:#1f3c88; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Identity-Aware Agent Gateway</h1>
+    <p class="muted">A production-style starter service showing how identity should shape retrieval, tools, policy, and release decisions in AI agents.</p>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Submit Agent Request</h2>
+        <button onclick="loadTokens()">Load Demo Tokens</button>
+        <div id="tokens" class="tokenBox muted">No demo tokens loaded yet.</div>
+
+        <label>Choose demo identity</label>
+        <select id="roleSelect"></select>
+
+        <label>Bearer token</label>
+        <textarea id="token" rows="4" placeholder="Paste or load a bearer token"></textarea>
+
+        <div class="row">
+          <div>
+            <label>Requested tool</label>
+            <select id="tool">
+              <option value="">(none)</option>
+              <option value="search_docs">search_docs</option>
+              <option value="ticket_lookup">ticket_lookup</option>
+              <option value="system_summary">system_summary</option>
+              <option value="finance_export">finance_export</option>
+            </select>
+          </div>
+          <div>
+            <label>Sensitivity</label>
+            <select id="sensitivity">
+              <option value="low">low</option>
+              <option value="medium" selected>medium</option>
+              <option value="high">high</option>
+              <option value="critical">critical</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Prompt</label>
+        <textarea id="prompt" rows="6">Summarize the oncall incident runbook</textarea>
+
+        <button onclick="submitRequest()">Submit</button>
+        <button class="secondary" onclick="loadWhoAmI()">Who am I?</button>
+
+        <h3>Result</h3>
+        <pre id="result">No request submitted yet.</pre>
+      </div>
+
+      <div class="card">
+        <h2>Review Queue</h2>
+        <p class="muted">Use a reviewer or admin token to inspect and resolve escalated requests.</p>
+        <button onclick="loadReviews()">Load Reviews</button>
+        <button class="secondary" onclick="loadMetrics()">Load Metrics</button>
+        <pre id="reviews">No review data loaded yet.</pre>
+
+        <h3>Resolve Review</h3>
+        <input id="reviewId" type="number" placeholder="Review ID" />
+        <select id="resolution">
+          <option value="approved">approved</option>
+          <option value="rejected">rejected</option>
+        </select>
+        <textarea id="reviewNote" rows="4" placeholder="Resolution note"></textarea>
+        <button onclick="resolveReview()">Resolve</button>
+      </div>
+    </div>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
