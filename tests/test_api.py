@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
-from app.main import app
+
 from app.auth import mint_token
+from app.main import app
 from scripts.seed import main as seed_main
 
 seed_main()

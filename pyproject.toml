@@ -1,0 +1,26 @@
+[project]
+name = "identity-aware-agent-gateway"
+version = "1.0.0"
+description = "Identity-shaped policy, retrieval, tools, audit logging and human review for AI agent requests."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient` is deprecated"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = [".venv"]
+
+[tool.ruff.lint]
+# pyflakes, pycodestyle errors/warnings, import order, bugbear
+select = ["E", "F", "W", "I", "B"]
+ignore = ["E501", "B008"]  # long strings in SQL/text; FastAPI's Depends() idiom
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["E402"]  # scripts add the repo root to sys.path before importing app

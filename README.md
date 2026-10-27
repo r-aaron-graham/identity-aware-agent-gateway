@@ -1,5 +1,44 @@
 # Identity-Aware Agent Gateway
 
+[![CI](https://github.com/r-aaron-graham/identity-aware-agent-gateway/actions/workflows/ci.yml/badge.svg)](https://github.com/r-aaron-graham/identity-aware-agent-gateway/actions/workflows/ci.yml)
+![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)
+![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg?logo=docker&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+**A FastAPI gateway that decides what an AI agent may do *for this specific user*: signed role tokens, classification-aware retrieval, permission-scoped tools, a policy engine with five release outcomes, a full audit trail, and a human review queue.**
+
+## Quickstart (about 2 minutes, no API keys)
+
+```bash
+git clone https://github.com/r-aaron-graham/identity-aware-agent-gateway.git
+cd identity-aware-agent-gateway
+docker compose up --build
+```
+
+Open http://127.0.0.1:8000 for the UI or http://127.0.0.1:8000/docs for the API. Then try it from the command line:
+
+```bash
+TOKEN=$(curl -s http://127.0.0.1:8000/api/v1/auth/demo-tokens | python -c "import sys,json; print(json.load(sys.stdin)['analyst']['token'])")
+
+curl -s -X POST http://127.0.0.1:8000/api/v1/agent/query \
+  -H "Authorization: Bearer $TOKEN" -H "content-type: application/json" \
+  -d '{"prompt":"Summarize the oncall incident runbook","requested_tool":"search_docs","sensitivity":"medium"}'
+# -> "outcome": "approved", with cited internal sources
+
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8000/api/v1/reviews -H "Authorization: Bearer $TOKEN"
+# -> 403: analysts cannot see the review queue
+```
+
+## Configuration
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `IAAG_SECRET_KEY` | `change-me` | HMAC key for signing tokens. The app logs a warning at startup if you leave the default. |
+| `IAAG_DB_PATH` | `./data/iaag.db` | SQLite database location |
+| `IAAG_AUTO_INIT_DB` | `true` | Create tables on startup |
+| `IAAG_TOKEN_TTL_SECONDS` | `43200` | Token lifetime (12 hours) |
+| `IAAG_ENABLE_DEMO_TOKENS` | `true` | Serves `/api/v1/auth/demo-tokens`, which hands out tokens for every role including admin. **Set to `false` anywhere that isn't a local demo.** |
+
 A production-style starter service that demonstrates the core argument behind the article:
 
 > **Why Identity Is the Missing Primitive in AI Agents**
@@ -274,5 +313,13 @@ This repository makes the article’s argument concrete:
 ## Running tests
 
 ```bash
-pytest -q
+pip install -r requirements-dev.txt
+make lint   # ruff
+make test   # pytest with coverage
 ```
+
+The suite covers the policy engine, the full request and review lifecycle, and the identity boundary: missing, malformed, tampered and expired tokens, role escalation via a forged claim, cross-user trace access, reviewer-only endpoints, double-resolving a review, and disabling demo tokens. CI also builds the Docker image, waits for its healthcheck, runs an end-to-end query, and verifies the container is not running as root.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

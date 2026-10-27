@@ -2,9 +2,9 @@ import json
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Iterable, Optional
-from app.config import DB_PATH, AUTO_INIT_DB
+from typing import Any, Iterable
 
+from app.config import AUTO_INIT_DB, DB_PATH
 
 SCHEMA_PATH = Path(__file__).resolve().parent / "sql" / "schema.sql"
 

@@ -1,7 +1,8 @@
 import re
 from dataclasses import dataclass
 from typing import List, Optional
-from app.services.identity import permissions_for, SENSITIVITY_RANK
+
+from app.services.identity import SENSITIVITY_RANK, permissions_for
 
 DESTRUCTIVE_PATTERNS = [
     r"\bdelete\b",
