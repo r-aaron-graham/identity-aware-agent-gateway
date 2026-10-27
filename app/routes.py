@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, Header, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, Header, HTTPException
 from fastapi.templating import Jinja2Templates
+
 from app.auth import mint_token, verify_token
-from app.config import DEMO_USERS
+from app.config import DEMO_USERS, ENABLE_DEMO_TOKENS
 from app.models import Identity, QueryRequest, QueryResponse, ReviewResolution
-from app.services.workflow import process_request, get_trace, list_reviews, resolve_review, get_metrics
+from app.services.workflow import get_metrics, get_trace, list_reviews, process_request, resolve_review
 
 router = APIRouter(prefix="/api/v1")
 templates = Jinja2Templates(directory="app/templates")
@@ -31,6 +31,8 @@ def reviewer_or_admin(identity: Identity = Depends(current_identity)) -> Identit
 
 @router.get("/auth/demo-tokens")
 def demo_tokens():
+    if not ENABLE_DEMO_TOKENS:
+        raise HTTPException(status_code=404, detail="Not Found")
     tokens = {}
     for key, user in DEMO_USERS.items():
         tokens[key] = {
