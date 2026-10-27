@@ -1,6 +1,3 @@
-from app.models import Identity
-
-
 ROLE_PERMISSIONS = {
     "viewer": {
         "classifications": ["public"],

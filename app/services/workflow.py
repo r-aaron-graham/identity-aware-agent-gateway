@@ -1,6 +1,7 @@
 import json
 import uuid
 from typing import Any
+
 from app.db import execute, fetch_all, fetch_one, write_audit
 from app.models import Identity, QueryRequest
 from app.services.policy import evaluate_policy

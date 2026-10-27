@@ -1,7 +1,7 @@
 import re
 from typing import Dict, List
-from app.db import fetch_all
 
+from app.db import fetch_all
 
 STOP_WORDS = {
     "the","a","an","and","or","to","of","for","in","on","is","are","this","that",
