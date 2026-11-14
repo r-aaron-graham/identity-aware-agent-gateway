@@ -285,3 +285,7 @@ docker run --rm -p 127.0.0.1:8000:8000 reviewer-smoke
 ```
 
 From another terminal, run `curl --fail http://127.0.0.1:8000/docs`. Expect HTTP 200. Use synthetic data and a throwaway SQLite database. The bundled signing key and token minting scripts are demo fixtures. Replace the identity setup before exposing the service.
+
+## Reproduce the tested dependency set
+
+Use Python 3.12 on Linux. Add `-c requirements.lock` to the documented pip install command. CI and the default Docker build use these same constraints. The security workflow audits the pinned Python packages for known advisories.
