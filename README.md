@@ -276,3 +276,12 @@ This repository makes the article’s argument concrete:
 ```bash
 pytest -q
 ```
+
+## Deployment verification
+
+```sh
+docker build -t reviewer-smoke .
+docker run --rm -p 127.0.0.1:8000:8000 reviewer-smoke
+```
+
+From another terminal, run `curl --fail http://127.0.0.1:8000/docs`. Expect HTTP 200. Use synthetic data and a throwaway SQLite database. The bundled signing key and token minting scripts are demo fixtures. Replace the identity setup before exposing the service.
